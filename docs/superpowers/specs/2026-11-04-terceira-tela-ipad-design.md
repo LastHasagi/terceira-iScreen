@@ -64,7 +64,11 @@ Toda ação recebe um identificador validado contra a lista abaixo. O servidor u
 
 Itens permitidos: Ollama, OpenClaw Gateway, Steam, Discord, RiotClient, Docker Desktop, Proton VPN e LGHUB.
 
-O estado é lido e gravado em `HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved`, nas subchaves `Run` e `StartupFolder`, o mesmo mecanismo do Gerenciador de Tarefas. Um item que deixar de existir some da lista.
+O estado é lido e gravado em `HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved`, nas subchaves `Run` e `StartupFolder`, o mesmo mecanismo do Gerenciador de Tarefas. O bit menos significativo do primeiro byte indica desligado (`03`) ou ligado (`02`), e valor ausente significa ligado. Listar `Win32_StartupCommand` não serve, porque inclui itens desativados.
+
+Um item só aparece se existir de fato em `HKCU\...\CurrentVersion\Run` ou na pasta Inicializar do usuário.
+
+Estado em 2026-11-04: ligados Ollama, Discord e Proton VPN; desligados Docker Desktop, Steam, RiotClient, LGHUB e OpenClaw Gateway.
 
 ### Plano de energia
 
@@ -93,7 +97,7 @@ Regras simples no servidor, cada uma com texto curto e ação quando houver:
 | Disco com menos de 20% livre | Aponta o disco e leva a Armazenamento | Nenhuma |
 | Docker ou Ollama ligados na inicialização | Sugere desligar | Interruptor |
 | Plano Equilibrado | Informa a opção e o ganho provavelmente pequeno | Controle segmentado |
-| Temporários antigos acima de 1 GB | Informa o total | Limpar |
+| Temporários com mais de 7 dias acima de 256 MB | Informa o total | Limpar |
 | RAM a 2667 MHz | Se o kit suportar mais, ativar XMP/DOCP na BIOS | Nenhuma |
 | Unidade ligada por USB | Evitar instalar jogos no D: | Nenhuma |
 | Disco rígido | Usar o E: só para arquivos | Nenhuma |
